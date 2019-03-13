@@ -146,6 +146,9 @@ class LearningSwitch(object):
                 self.connection.send(msg)
 
         self.macToPort[packet.src] = event.port  # 1
+        log.debug('============self.macToPort============')
+        log.debug(self.macToPort)
+        log.debug('============self.macToPort============')
 
         if not self.transparent:  # 2
             if packet.type == packet.LLDP_TYPE or packet.dst.isBridgeFiltered():
