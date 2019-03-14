@@ -181,7 +181,7 @@ class l3_switch(EventMixin):
             ip_pkt = event.parsed.find('ip')
             tcp_pkt = event.parsed.find('tcp')
 
-            # tcp rule
+            # TCP
             if tcp_pkt:
 
                 controls = ['FIN', 'SYN', 'RST', 'PSH', 'ACK', 'URG', 'ECN', 'CWR']
@@ -234,6 +234,40 @@ class l3_switch(EventMixin):
                 # if we can not find any successful rules, we return.
                 for rule in rules:
                     if check_tcp_rule(rule):
+                        log.debug('{}{}: {}'.format(' ' * 5, 'Rule matches', rule))
+                        log.debug('-' * 40)
+                        break
+                else:
+                    log.debug('{}{}'.format(' ' * 5, 'Rule doesn\'t match'))
+                    log.debug('-' * 40)
+                    return
+            # IPv4
+            else:
+                log.debug('+'*40)
+                log.debug('{}{}--->{}'.format(' ' * 5, packet.next.srcip, packet.next.dstip))
+                log.debug('-' * 40)
+
+                # IP rule
+                def check_ip_rule(rule):
+                    if packet.next.srcip == rule[0] and packet.next.dstip == rule[1]:
+                        return True
+                    if packet.next.srcip == rule[1] and packet.next.dstip == rule[0]:
+                        return True
+
+                rules = [
+                    ['10.0.0.1', '10.0.0.2'],
+                    ['10.0.0.2', '10.0.0.3'],
+                    ['10.0.0.2', '10.0.0.5'],
+                    ['10.0.0.3', '10.0.0.6'],
+                    ['10.0.0.4', '10.0.0.5'],
+                    ['10.0.0.5', '10.0.0.6'],
+                    ['10.0.0.6', '10.0.0.7'],
+                    ['10.0.0.7', '10.0.0.8'],
+                ]
+
+                # if we can not find any successful rules, we return.
+                for rule in rules:
+                    if check_ip_rule(rule):
                         log.debug('{}{}: {}'.format(' ' * 5, 'Rule matches', rule))
                         log.debug('-' * 40)
                         break
