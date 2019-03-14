@@ -167,6 +167,18 @@ class LearningSwitch(object):
                                 % (packet.src, packet.dst, dpid_to_str(event.dpid), port))
                     drop(10)
                     return
+
+                # block rules
+                rules = [
+                    ['00:00:00:00:00:01', '00:00:00:00:00:02'],
+                    ['00:00:00:00:00:02', '00:00:00:00:00:04'],
+                    ['00:00:00:00:00:08', '00:00:00:00:00:03'],
+                    ['00:00:00:00:00:07', '00:00:00:00:00:02']
+                ]
+                for rule in rules:
+                    if packet.src == rule[0] and packet.dst == rule[1]:
+                        return
+
                 # 6
                 log.debug("installing flow for %s.%i -> %s.%i" %
                           (packet.src, event.port, packet.dst, port))
@@ -199,21 +211,6 @@ class l2_learning(object):
         if event.dpid in self.ignore:
             log.debug("Ignoring connection %s" % (event.connection,))
             return
-
-        # block rules
-        rules = [
-            ['00:00:00:00:00:01', '00:00:00:00:00:02'],
-            ['00:00:00:00:00:02', '00:00:00:00:00:04'],
-            ['00:00:00:00:00:08', '00:00:00:00:00:03'],
-            ['00:00:00:00:00:07', '00:00:00:00:00:02']
-        ]
-        for rule in rules:
-            block = of.ofp_match()
-            block.dl_src = EthAddr(rule[0])
-            block.dl_dst = EthAddr(rule[1])
-            flow_mod = of.ofp_flow_mod()
-            flow_mod.match = block
-            event.connection.send(flow_mod)
 
         log.debug("Connection %s" % (event.connection,))
         LearningSwitch(event.connection, self.transparent)
