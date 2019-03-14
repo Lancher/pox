@@ -177,9 +177,10 @@ class l3_switch(EventMixin):
             log.debug("%i %i IP %s => %s", dpid, inport,
                       packet.next.srcip, packet.next.dstip)
             try:
-                log.debug(packet.next)
-                log.debug("~~~~{}:{} ---> {}:{}", packet.next.srcip, packet.next.srcport
-                          , packet.next.dstip, packet.next.dstport)
+                log.debug('--------{}'.format(packet))
+                log.debug('~~~~~~~~{}'.format(packet.next))
+                # log.debug("~~~~{}:{} ---> {}:{}", packet.next.srcip, packet.next.srcport
+                #           , packet.next.dstip, packet.next.dstport)
             except AttributeError:
                 pass
 
