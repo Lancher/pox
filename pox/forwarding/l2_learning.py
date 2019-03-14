@@ -102,9 +102,6 @@ class LearningSwitch(object):
 
         packet = event.parsed
 
-        log.debug('--------------{}'.format(datetime.datetime.now()))
-        log.debug(packet)
-
         def flood(message=None):
             """ Floods the packet """
             msg = of.ofp_packet_out()
@@ -170,7 +167,6 @@ class LearningSwitch(object):
                     drop(10)
                     return
                 # 6
-                log.debug('~~~~~~~~~~~~~{}'.format(datetime.datetime.now()))
                 log.debug("installing flow for %s.%i -> %s.%i" %
                           (packet.src, event.port, packet.dst, port))
                 msg = of.ofp_flow_mod()
