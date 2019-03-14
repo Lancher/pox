@@ -21,6 +21,7 @@ exact-match rules for each flow.
 """
 
 import time
+import datetime
 
 import pox.openflow.libopenflow_01 as of
 from pox.core import core
@@ -101,6 +102,9 @@ class LearningSwitch(object):
 
         packet = event.parsed
 
+        log.debug('--------------{}'.format(datetime.datetime.now()))
+        log.debug(packet)
+
         def flood(message=None):
             """ Floods the packet """
             msg = of.ofp_packet_out()
@@ -146,7 +150,6 @@ class LearningSwitch(object):
                 self.connection.send(msg)
 
         self.macToPort[packet.src] = event.port  # 1
-        import datetime
 
         if not self.transparent:  # 2
             if packet.type == packet.LLDP_TYPE or packet.dst.isBridgeFiltered():
