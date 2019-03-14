@@ -189,8 +189,11 @@ class l3_switch(EventMixin):
                     head += ctl.ljust(4)
                     bit = 1 if eval('tcp_pkt.' + ctl) else 0
                     content += str(bit).ljust(4)
-                log.debug(head)
+                log.debug('+'*40)
+                log.debug('{}{}--->{}'.format(' ' * 5, packet.next.srcip, packet.next.dstip))
+                log.debug(' ' * 5 + head)
                 log.debug(content)
+                log.debug('-' * 40)
 
             # # tcp rules
             # if tcp_pkt:
