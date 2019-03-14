@@ -167,7 +167,7 @@ class LearningSwitch(object):
                     drop(10)
                     return
                 # 6
-                log.debug('~~~~~~~~~~~~~', datetime.datetime.now())
+                log.debug('~~~~~~~~~~~~~{}'.format(datetime.datetime.now()))
                 log.debug("installing flow for %s.%i -> %s.%i" %
                           (packet.src, event.port, packet.dst, port))
                 msg = of.ofp_flow_mod()
