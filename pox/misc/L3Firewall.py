@@ -187,7 +187,7 @@ class l3_switch(EventMixin):
                 content = ''
                 for ctl in controls:
                     head += ctl.ljust(4)
-                    bit = 1 if eval('tcp_pkt.' + 'ctl') else 0
+                    bit = 1 if eval('tcp_pkt.' + ctl) else 0
                     content += str(bit).ljust(4)
                 log.debug(head)
                 log.debug(content)
