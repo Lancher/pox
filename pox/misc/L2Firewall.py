@@ -176,7 +176,8 @@ class LearningSwitch(object):
                     ['00:00:00:00:00:07', '00:00:00:00:00:02']
                 ]
                 for rule in rules:
-                    if packet.src == rule[0] and packet.dst == rule[1]:
+                    if str(packet.src) == rule[0] and str(packet.dst) == rule[1]:
+                        drop()
                         return
 
                 # 6
