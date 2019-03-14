@@ -183,21 +183,21 @@ class l3_switch(EventMixin):
 
             # tcp rules
             if tcp_pkt:
-                if str(tcp_pkt.srcip) == '10.0.0.1' and str(tcp_pkt.dstip) == '10.0.0.2':
+                if str(ip_pkt.srcip) == '10.0.0.1' and str(ip_pkt.dstip) == '10.0.0.2':
                     pass
-                elif str(tcp_pkt.srcip) == '10.0.0.2' and str(tcp_pkt.srcport) == '4444' and str(tcp_pkt.dstip) == '10.0.0.3':
+                elif str(ip_pkt.srcip) == '10.0.0.2' and str(tcp_pkt.srcport) == '4444' and str(ip_pkt.dstip) == '10.0.0.3':
                     pass
-                elif str(tcp_pkt.srcip) == '10.0.0.2' and str(tcp_pkt.srcport) == '6666' and str(tcp_pkt.dstip) == '10.0.0.5' and str(tcp_pkt.dstport) == '7777':
+                elif str(ip_pkt.srcip) == '10.0.0.2' and str(tcp_pkt.srcport) == '6666' and str(ip_pkt.dstip) == '10.0.0.5' and str(tcp_pkt.dstport) == '7777':
                     pass
-                elif str(tcp_pkt.srcip) == '10.0.0.3' and str(tcp_pkt.dstip) == '10.0.0.6':
+                elif str(ip_pkt.srcip) == '10.0.0.3' and str(ip_pkt.dstip) == '10.0.0.6':
                     pass
-                elif str(tcp_pkt.srcip) == '10.0.0.4' and str(tcp_pkt.srcport) == '5555' and str(tcp_pkt.dstip) == '10.0.0.5' and str(tcp_pkt.dstport) == '21':
+                elif str(ip_pkt.srcip) == '10.0.0.4' and str(tcp_pkt.srcport) == '5555' and str(ip_pkt.dstip) == '10.0.0.5' and str(tcp_pkt.dstport) == '21':
                     pass
-                elif str(tcp_pkt.srcip) == '10.0.0.5' and str(tcp_pkt.srcport) == '2222' and str(tcp_pkt.dstip) == '10.0.0.6' and str(tcp_pkt.dstport) == '53':
+                elif str(ip_pkt.srcip) == '10.0.0.5' and str(tcp_pkt.srcport) == '2222' and str(ip_pkt.dstip) == '10.0.0.6' and str(tcp_pkt.dstport) == '53':
                     pass
-                elif str(tcp_pkt.srcip) == '10.0.0.6' and str(tcp_pkt.srcport) == '80' and str(tcp_pkt.dstip) == '10.0.0.7' and str(tcp_pkt.dstport) == '80':
+                elif str(ip_pkt.srcip) == '10.0.0.6' and str(tcp_pkt.srcport) == '80' and str(ip_pkt.dstip) == '10.0.0.7' and str(tcp_pkt.dstport) == '80':
                     pass
-                elif str(tcp_pkt.srcip) == '10.0.0.7' and str(tcp_pkt.srcport) == '443' and str(tcp_pkt.dstip) == '10.0.0.8' and str(tcp_pkt.dstport) == '443':
+                elif str(ip_pkt.srcip) == '10.0.0.7' and str(tcp_pkt.srcport) == '443' and str(ip_pkt.dstip) == '10.0.0.8' and str(tcp_pkt.dstport) == '443':
                     pass
                 else:
                     return
