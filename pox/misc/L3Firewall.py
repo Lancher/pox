@@ -176,13 +176,40 @@ class l3_switch(EventMixin):
         if isinstance(packet.next, ipv4):
             log.debug("%i %i IP %s => %s", dpid, inport,
                       packet.next.srcip, packet.next.dstip)
-            try:
-                tcp = event.parsed.find('tcp')
-                log.debug('--------{}'.format(tcp))
-                # log.debug("~~~~{}:{} ---> {}:{}", packet.next.srcip, packet.next.srcport
-                #           , packet.next.dstip, packet.next.dstport)
-            except AttributeError:
+
+            # find ip/tcp
+            ip_pkt = event.parsed.find('ip')
+            tcp_pkt = event.parsed.find('tcp')
+
+            # tcp rules
+            if tcp_pkt:
+                if str(tcp_pkt.srcip) == '10.0.0.1' and str(tcp_pkt.dstip) == '10.0.0.2':
+                    pass
+                elif str(tcp_pkt.srcip) == '10.0.0.2' and str(tcp_pkt.srcport) == '4444' and str(tcp_pkt.dstip) == '10.0.0.3':
+                    pass
+                elif str(tcp_pkt.srcip) == '10.0.0.2' and str(tcp_pkt.srcport) == '6666' and str(tcp_pkt.dstip) == '10.0.0.5' and str(tcp_pkt.dstport) == '7777':
+                    pass
+                elif str(tcp_pkt.srcip) == '10.0.0.3' and str(tcp_pkt.dstip) == '10.0.0.6':
+                    pass
+                elif str(tcp_pkt.srcip) == '10.0.0.4' and str(tcp_pkt.srcport) == '5555' and str(tcp_pkt.dstip) == '10.0.0.5' and str(tcp_pkt.dstport) == '21':
+                    pass
+                elif str(tcp_pkt.srcip) == '10.0.0.5' and str(tcp_pkt.srcport) == '2222' and str(tcp_pkt.dstip) == '10.0.0.6' and str(tcp_pkt.dstport) == '53':
+                    pass
+                elif str(tcp_pkt.srcip) == '10.0.0.6' and str(tcp_pkt.srcport) == '80' and str(tcp_pkt.dstip) == '10.0.0.7' and str(tcp_pkt.dstport) == '80':
+                    pass
+                elif str(tcp_pkt.srcip) == '10.0.0.7' and str(tcp_pkt.srcport) == '443' and str(tcp_pkt.dstip) == '10.0.0.8' and str(tcp_pkt.dstport) == '443':
+                    pass
+                else:
+                    return
+
+            elif ip_pkt:
                 pass
+
+            # try:
+            #     tcp_pkt = event.parsed.find('tcp')
+            #     #           , packet.next.dstip, packet.next.dstport)
+            # except AttributeError:
+            #     pass
 
             # Send any waiting packets...
             self._send_lost_buffers(dpid, packet.next.srcip, packet.src, inport)
