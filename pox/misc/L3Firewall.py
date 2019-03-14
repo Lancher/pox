@@ -192,7 +192,7 @@ class l3_switch(EventMixin):
                 log.debug('+'*40)
                 log.debug('{}{}--->{}'.format(' ' * 5, packet.next.srcip, packet.next.dstip))
                 log.debug(' ' * 5 + head)
-                log.debug(content)
+                log.debug(' ' * 5 + content)
                 log.debug('-' * 40)
 
             # # tcp rules
