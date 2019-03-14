@@ -176,9 +176,12 @@ class l3_switch(EventMixin):
         if isinstance(packet.next, ipv4):
             log.debug("%i %i IP %s => %s", dpid, inport,
                       packet.next.srcip, packet.next.dstip)
-
-            log.debug("~~~~{}:{} ---> {}:{}", packet.next.srcip, packet.next.srcport
-                      , packet.next.dstip, packet.next.dstport)
+            try:
+                log.debug(packet.next)
+                log.debug("~~~~{}:{} ---> {}:{}", packet.next.srcip, packet.next.srcport
+                          , packet.next.dstip, packet.next.dstport)
+            except AttributeError:
+                pass
 
             # Send any waiting packets...
             self._send_lost_buffers(dpid, packet.next.srcip, packet.src, inport)
