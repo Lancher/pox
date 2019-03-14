@@ -234,7 +234,7 @@ class l3_switch(EventMixin):
                 # if we can not find any successful rules, we return.
                 for rule in rules:
                     if check_tcp_rule(rule):
-                        log.debug('*' * 5 + ' Rule Match', rule)
+                        log.debug('*' * 5 + ' Rule Match', str(rule))
                         break
                 else:
                     return
