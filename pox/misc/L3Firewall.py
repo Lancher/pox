@@ -195,7 +195,6 @@ class l3_switch(EventMixin):
                 log.debug('{}{}:{}--->{}:{}'.format(' ' * 5, packet.next.srcip, tcp_pkt.srcport, packet.next.dstip, tcp_pkt.dstport))
                 log.debug(' ' * 5 + head)
                 log.debug(' ' * 5 + content)
-                log.debug('-' * 40)
 
                 # rules checker
                 def check_tcp_rule(rule):
@@ -235,6 +234,7 @@ class l3_switch(EventMixin):
                 # if we can not find any successful rules, we return.
                 for rule in rules:
                     if check_tcp_rule(rule):
+                        log.debug('*' * 5 + ' Rule Match', rule)
                         break
                 else:
                     return
