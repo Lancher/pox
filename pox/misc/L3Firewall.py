@@ -183,6 +183,7 @@ class l3_switch(EventMixin):
 
             # tcp rules
             if tcp_pkt:
+                log.debug('~~~~~~{}>{}'.format(packet.next.srcip, packet.next.dstip))
                 if str(packet.next.srcip) == '10.0.0.1' and str(packet.next.dstip) == '10.0.0.2':
                     pass
                 elif str(packet.next.srcip) == '10.0.0.2' and str(tcp_pkt.srcport) == '4444' and str(packet.next.dstip) == '10.0.0.3':
