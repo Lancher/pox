@@ -181,7 +181,9 @@ class l3_switch(EventMixin):
             ip_pkt = event.parsed.find('ip')
             tcp_pkt = event.parsed.find('tcp')
 
+            # tcp rule
             if tcp_pkt:
+
                 controls = ['FIN', 'SYN', 'RST', 'PSH', 'ACK', 'URG', 'ECN', 'CWR']
                 head = ''
                 content = ''
@@ -190,35 +192,52 @@ class l3_switch(EventMixin):
                     bit = 1 if eval('tcp_pkt.' + ctl) else 0
                     content += str(bit).ljust(4)
                 log.debug('+'*40)
-                log.debug('{}{}--->{}'.format(' ' * 5, packet.next.srcip, packet.next.dstip))
+                log.debug('{}{}:{}--->{}:{}'.format(' ' * 5, packet.next.srcip, tcp_pkt.srcport, packet.next.dstip, tcp_pkt.dstport))
                 log.debug(' ' * 5 + head)
                 log.debug(' ' * 5 + content)
                 log.debug('-' * 40)
 
-            # # tcp rules
-            # if tcp_pkt:
-            #     log.debug('~~~~~~{}>{}'.format(packet.next.srcip, packet.next.dstip))
-            #     if str(packet.next.srcip) == '10.0.0.1' and str(packet.next.dstip) == '10.0.0.2':
-            #         pass
-            #     elif str(packet.next.srcip) == '10.0.0.2' and str(tcp_pkt.srcport) == '4444' and str(packet.next.dstip) == '10.0.0.3':
-            #         pass
-            #     elif str(packet.next.srcip) == '10.0.0.2' and str(tcp_pkt.srcport) == '6666' and str(packet.next.dstip) == '10.0.0.5' and str(tcp_pkt.dstport) == '7777':
-            #         pass
-            #     elif str(packet.next.srcip) == '10.0.0.3' and str(packet.next.dstip) == '10.0.0.6':
-            #         pass
-            #     elif str(packet.next.srcip) == '10.0.0.4' and str(tcp_pkt.srcport) == '5555' and str(packet.next.dstip) == '10.0.0.5' and str(tcp_pkt.dstport) == '21':
-            #         pass
-            #     elif str(packet.next.srcip) == '10.0.0.5' and str(tcp_pkt.srcport) == '2222' and str(packet.next.dstip) == '10.0.0.6' and str(tcp_pkt.dstport) == '53':
-            #         pass
-            #     elif str(packet.next.srcip) == '10.0.0.6' and str(tcp_pkt.srcport) == '80' and str(packet.next.dstip) == '10.0.0.7' and str(tcp_pkt.dstport) == '80':
-            #         pass
-            #     elif str(packet.next.srcip) == '10.0.0.7' and str(tcp_pkt.srcport) == '443' and str(packet.next.dstip) == '10.0.0.8' and str(tcp_pkt.dstport) == '443':
-            #         pass
-            #     else:
-            #         return
-            #
-            # elif ip_pkt:
-            #     pass
+                # rules checker
+                def check_tcp_rule(rule):
+                    if rule[1] == '-1' and rule[3] == '-1':
+                        if str(packet.next.srcip) == rule[0] and str(packet.next.dstip) == rule[2]:
+                            return True
+                        if str(packet.next.srcip) == rule[2] and str(packet.next.dstip) == rule[0]:
+                            return True
+                    elif rule[1] == '-1':
+                        if str(packet.next.srcip) == rule[0] and str(packet.next.dstip) == rule[2] and str(tcp_pkt.dstport) == rule[3]:
+                            return True
+                        if str(packet.next.srcip) == rule[2] and str(tcp_pkt.srcport) == rule[3] and str(packet.next.dstip) == rule[0]:
+                            return True
+                    elif rule[3] == '-1':
+                        if str(packet.next.srcip) == rule[0] and str(tcp_pkt.srcport) == rule[1] and str(packet.next.dstip) == rule[2]:
+                            return True
+                        if str(packet.next.srcip) == rule[2] and str(packet.next.dstip) == rule[0] and str(tcp_pkt.dstport) == rule[1]:
+                            return True
+                    else:
+                        if str(packet.next.srcip) == rule[0] and str(tcp_pkt.srcport) == rule[1] and str(packet.next.dstip) == rule[2] and str(tcp_pkt.dstport) == rule[3]:
+                            return True
+                        if str(packet.next.srcip) == rule[2] and str(tcp_pkt.srcport) == rule[3] and str(packet.next.dstip) == rule[0] and str(tcp_pkt.dstport) == rule[1]:
+                            return True
+                    return False
+
+                rules = [
+                    ['10.0.0.1', '-1', '10.0.0.2', '-1'],
+                    ['10.0.0.2', '4444', '10.0.0.3', '-1'],
+                    ['10.0.0.2', '6666', '10.0.0.5', '7777'],
+                    ['10.0.0.3', '-1', '10.0.0.6', '-1'],
+                    ['10.0.0.4', '5555', '10.0.0.5', '21'],
+                    ['10.0.0.5', '2222', '10.0.0.6', '53'],
+                    ['10.0.0.6', '80', '10.0.0.7', '80'],
+                    ['10.0.0.7', '443', '10.0.0.8', '443'],
+                ]
+
+                # if we can not find any successful rules, we return.
+                for rule in rules:
+                    if check_tcp_rule(rule):
+                        break
+                else:
+                    return
 
             # Send any waiting packets...
             self._send_lost_buffers(dpid, packet.next.srcip, packet.src, inport)
