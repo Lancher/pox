@@ -181,35 +181,40 @@ class l3_switch(EventMixin):
             ip_pkt = event.parsed.find('ip')
             tcp_pkt = event.parsed.find('tcp')
 
-            # tcp rules
             if tcp_pkt:
-                log.debug('~~~~~~{}>{}'.format(packet.next.srcip, packet.next.dstip))
-                if str(packet.next.srcip) == '10.0.0.1' and str(packet.next.dstip) == '10.0.0.2':
-                    pass
-                elif str(packet.next.srcip) == '10.0.0.2' and str(tcp_pkt.srcport) == '4444' and str(packet.next.dstip) == '10.0.0.3':
-                    pass
-                elif str(packet.next.srcip) == '10.0.0.2' and str(tcp_pkt.srcport) == '6666' and str(packet.next.dstip) == '10.0.0.5' and str(tcp_pkt.dstport) == '7777':
-                    pass
-                elif str(packet.next.srcip) == '10.0.0.3' and str(packet.next.dstip) == '10.0.0.6':
-                    pass
-                elif str(packet.next.srcip) == '10.0.0.4' and str(tcp_pkt.srcport) == '5555' and str(packet.next.dstip) == '10.0.0.5' and str(tcp_pkt.dstport) == '21':
-                    pass
-                elif str(packet.next.srcip) == '10.0.0.5' and str(tcp_pkt.srcport) == '2222' and str(packet.next.dstip) == '10.0.0.6' and str(tcp_pkt.dstport) == '53':
-                    pass
-                elif str(packet.next.srcip) == '10.0.0.6' and str(tcp_pkt.srcport) == '80' and str(packet.next.dstip) == '10.0.0.7' and str(tcp_pkt.dstport) == '80':
-                    pass
-                elif str(packet.next.srcip) == '10.0.0.7' and str(tcp_pkt.srcport) == '443' and str(packet.next.dstip) == '10.0.0.8' and str(tcp_pkt.dstport) == '443':
-                    pass
-                else:
-                    return
+                controls = ['FIN', 'SYN', 'RST', 'PSH', 'ACK', 'URG', 'ECN', 'CWR']
+                head = ''
+                content = ''
+                for ctl in controls:
+                    head += ctl.ljust(4)
+                    bit = 1 if eval('tcp_pkt.' + 'ctl') else 0
+                    content += str(bit).ljust(4)
+                log.debug(head)
+                log.debug(content)
 
-            elif ip_pkt:
-                pass
-
-            # try:
-            #     tcp_pkt = event.parsed.find('tcp')
-            #     #           , packet.next.dstip, packet.next.dstport)
-            # except AttributeError:
+            # # tcp rules
+            # if tcp_pkt:
+            #     log.debug('~~~~~~{}>{}'.format(packet.next.srcip, packet.next.dstip))
+            #     if str(packet.next.srcip) == '10.0.0.1' and str(packet.next.dstip) == '10.0.0.2':
+            #         pass
+            #     elif str(packet.next.srcip) == '10.0.0.2' and str(tcp_pkt.srcport) == '4444' and str(packet.next.dstip) == '10.0.0.3':
+            #         pass
+            #     elif str(packet.next.srcip) == '10.0.0.2' and str(tcp_pkt.srcport) == '6666' and str(packet.next.dstip) == '10.0.0.5' and str(tcp_pkt.dstport) == '7777':
+            #         pass
+            #     elif str(packet.next.srcip) == '10.0.0.3' and str(packet.next.dstip) == '10.0.0.6':
+            #         pass
+            #     elif str(packet.next.srcip) == '10.0.0.4' and str(tcp_pkt.srcport) == '5555' and str(packet.next.dstip) == '10.0.0.5' and str(tcp_pkt.dstport) == '21':
+            #         pass
+            #     elif str(packet.next.srcip) == '10.0.0.5' and str(tcp_pkt.srcport) == '2222' and str(packet.next.dstip) == '10.0.0.6' and str(tcp_pkt.dstport) == '53':
+            #         pass
+            #     elif str(packet.next.srcip) == '10.0.0.6' and str(tcp_pkt.srcport) == '80' and str(packet.next.dstip) == '10.0.0.7' and str(tcp_pkt.dstport) == '80':
+            #         pass
+            #     elif str(packet.next.srcip) == '10.0.0.7' and str(tcp_pkt.srcport) == '443' and str(packet.next.dstip) == '10.0.0.8' and str(tcp_pkt.dstport) == '443':
+            #         pass
+            #     else:
+            #         return
+            #
+            # elif ip_pkt:
             #     pass
 
             # Send any waiting packets...
